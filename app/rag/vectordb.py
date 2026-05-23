@@ -1,6 +1,6 @@
 import chromadb
 
-client = chromadb.PersistentClient(path="chroma_db")
+client = chromadb.Client()
 
 collection = client.get_or_create_collection(
     name="rag_collection"

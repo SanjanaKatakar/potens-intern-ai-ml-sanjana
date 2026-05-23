@@ -1,13 +1,18 @@
 from app.rag.embeddings import get_embedding
 from app.rag.vectordb import collection
+from app.rag.translator import translate_to_english
 
 
-def retrieve_chunks(query, top_k=5):
+def retrieve_chunks(query, top_k=10):
     """
-    Retrieve most relevant chunks from ChromaDB.
+    Retrieve most relevant chunks.
     """
 
-    query_embedding = get_embedding([query])[0]
+    translated_query = translate_to_english(query)
+
+    query_embedding = get_embedding(
+        [translated_query]
+    )[0]
 
     results = collection.query(
         query_embeddings=[query_embedding],
@@ -18,18 +23,17 @@ def retrieve_chunks(query, top_k=5):
 
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
-    distances = results["distances"][0]
 
-    for doc, metadata, distance in zip(
+    for doc, metadata in zip(
         documents,
-        metadatas,
-        distances
+        metadatas
     ):
 
-        retrieved_docs.append({
-            "text": doc,
-            "page": metadata["page"],
-            "score": distance
-        })
+        if len(doc.strip()) > 100:
+
+            retrieved_docs.append({
+                "text": doc,
+                "page": metadata["page"]
+            })
 
     return retrieved_docs

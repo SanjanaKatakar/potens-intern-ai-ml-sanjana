@@ -24,19 +24,26 @@ def generate_answer(question, retrieved_chunks):
     )
 
     prompt = f"""
-Answer ONLY using the provided context.
+    You are a helpful AI research assistant.
 
-If answer is not present, say:
-"The documents do not contain enough information."
+    Use ONLY the provided context to answer.
 
-QUESTION:
-{question}
+    Be concise and accurate.
 
-CONTEXT:
-{context}
+    If the answer is partially available, provide the available information.
 
-ANSWER:
-"""
+    Only say:
+    "The documents do not contain enough information."
+    if absolutely nothing relevant exists.
+
+    QUESTION:
+    {question}
+
+    CONTEXT:
+    {context}
+
+    ANSWER:
+    """
 
     try:
 
