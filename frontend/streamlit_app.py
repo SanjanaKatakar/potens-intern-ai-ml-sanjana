@@ -8,6 +8,27 @@ st.set_page_config(
 
 st.title("📚 Multilingual RAG System")
 
+uploaded_file = st.file_uploader(
+    "Upload PDF",
+    type=["pdf"]
+)
+if uploaded_file is not None:
+
+    if st.button("Process PDF"):
+
+        files = {
+            "file": uploaded_file
+        }
+
+        response = requests.post(
+            "http://127.0.0.1:8000/upload",
+            files=files
+        )
+
+        st.success(
+            response.json()["message"]
+        )
+
 st.write("Ask questions from your uploaded documents.")
 
 
@@ -30,7 +51,7 @@ if st.button("Get Answer"):
                         "question": question
                     }
                 )
-                
+
                 data = response.json()
 
                 st.subheader("Answer")
@@ -57,3 +78,4 @@ if st.button("Get Answer"):
     else:
 
         st.warning("Please enter a question.")
+    

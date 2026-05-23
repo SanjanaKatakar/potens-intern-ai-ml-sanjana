@@ -4,9 +4,6 @@ from app.rag.translator import translate_to_english
 
 
 def retrieve_chunks(query, top_k=10):
-    """
-    Retrieve most relevant chunks.
-    """
 
     translated_query = translate_to_english(query)
 
@@ -23,17 +20,20 @@ def retrieve_chunks(query, top_k=10):
 
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
+    distances = results["distances"][0]
 
-    for doc, metadata in zip(
+    for doc, metadata, distance in zip(
         documents,
-        metadatas
+        metadatas,
+        distances
     ):
 
         if len(doc.strip()) > 100:
 
             retrieved_docs.append({
                 "text": doc,
-                "page": metadata["page"]
+                "page": metadata["page"],
+                "score": distance
             })
 
     return retrieved_docs

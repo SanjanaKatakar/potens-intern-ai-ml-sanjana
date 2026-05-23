@@ -8,8 +8,10 @@ from app.rag.generator import generate_answer
 from app.rag.citation import generate_citations
 
 from app.rag.setup_db import setup_database
+from fastapi import UploadFile
 
-setup_database()
+import shutil
+
 
 app = FastAPI(
     title="RAG System",
@@ -44,4 +46,23 @@ def ask_question(request: QuestionRequest):
     return {
         "answer": answer,
         "citations": citations
+    }
+
+@app.post("/upload")
+
+def upload_pdf(file: UploadFile):
+
+    save_path = f"data/raw/{file.filename}"
+
+    with open(save_path, "wb") as buffer:
+
+        shutil.copyfileobj(
+            file.file,
+            buffer
+        )
+
+    setup_database(save_path)
+
+    return {
+        "message": f"{file.filename} uploaded successfully"
     }

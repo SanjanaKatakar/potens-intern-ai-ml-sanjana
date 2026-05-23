@@ -4,21 +4,19 @@ from app.rag.embeddings import get_embedding
 from app.rag.vectordb import collection
 
 
-def setup_database():
+def setup_database(pdf_path):
 
-    existing = collection.count()
+    try:
 
-    if existing > 0:
+        collection.delete(
+            where={}
+        )
 
-        print(f"Database already contains {existing} chunks")
+    except:
 
-        return
+        pass
 
-    print("Creating vector database...")
-
-    PDF_PATH = "data/raw/sample.pdf"
-
-    documents = load_pdf(PDF_PATH)
+    documents = load_pdf(pdf_path)
 
     all_chunks = []
     all_embeddings = []
