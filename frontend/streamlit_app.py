@@ -78,4 +78,3 @@ if st.button("Get Answer"):
     else:
 
         st.warning("Please enter a question.")
-    
